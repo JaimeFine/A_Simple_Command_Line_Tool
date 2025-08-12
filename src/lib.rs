@@ -120,4 +120,5 @@ pub fn count_lines(query: &str, contents: &str) -> i32 {
     }
     
     num
+
 }   // Function to count the number of the line that the keywords exist.
