@@ -118,6 +118,6 @@ pub fn count_lines(query: &str, contents: &str) -> i32 {
     } else {
         eprintln!("Something went wrong!!!");
     }
-    
+
     num
-}   // Function to count the number of the line that the keywords exist.
+}  
