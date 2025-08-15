@@ -3,9 +3,7 @@ use std::process;
 use minigrep::Command;
 
 fn main() {
-    let args: Vec<String> = env::args().collect();  // Reading the arguments.
-
-    let config = Command::build(&args).unwrap_or_else(|err| {
+    let config = Command::build(env::args()).unwrap_or_else(|err| {
         eprintln!("Problem parsing arguments: {err}");
         process::exit(1);
     }); // Building the configuration arguments.
