@@ -9,16 +9,28 @@ pub struct Command {
 }   // This is for the command.
 
 impl Command {
-    pub fn build(args: &[String]) -> Result<Command, &'static str> {
-        if args.len() < 3 {
-            return Err("not enough arguments")
-        }
+    pub fn build(
+        mut args: impl Iterator<Item = String>,
+    ) -> Result<Command, &'static str> {
+        args.next();
 
-        let query = args[1].clone();
-        let file_path = args[2].clone();
+        let query = match args.next() {
+            Some(arg) => arg,
+            None => return Err("Didn't get a query string"),
+        };
+
+        let file_path = match args.next() {
+            Some(arg) => arg,
+            None => return Err("Didn't get a file path"),
+        };
+
         let ignore_case = env::var("IGNORE_CASE").is_ok();
 
-        Ok(Command{query, file_path, ignore_case})
+        Ok(Command{
+            query,
+            file_path,
+            ignore_case
+        })
     }
 }   // A method for the Config struct.
 
@@ -77,15 +89,10 @@ Trust me and rust.";
 }
 
 pub fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
-    let mut results = Vec::new();
-
-    for line in contents.lines() {
-        if line.contains(query) {
-            results.push(line);
-        }
-    }
-
-    results
+    contents
+        .lines()
+        .filter(|line| line.contains(query))
+        .collect()
 }   // A function for the search of the result of the command
 
 pub fn search_case_insensitive<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
@@ -102,21 +109,16 @@ pub fn search_case_insensitive<'a>(query: &str, contents: &'a str) -> Vec<&'a st
 }   // A function that works the same as search(), but insensitive to case.
 
 pub fn count_lines(query: &str, contents: &str) -> i32 {
-    let mut num = 0;
+    let num = contents
+        .lines()
+        .filter(|line| line.contains(query))
+        .count() as i32;
 
-    for line in contents.lines() {
-        if line.contains(&query) {
-            num += 1;
-        }
-    }
-    if num == 1 {
-        println!("There is only {num} lineshat contains {}", &query);
-    } else if num == 0 {
-        println!("There are no lines that contains {}", &query);
-    } else if num > 1 {
-        println!("There are {num} lines that contains {}", &query);
-    } else {
-        eprintln!("Something went wrong!!!");
+    match num {
+        0 => println!("There are no lines that contains {}", &query),
+        1 => println!("There is only {num} lineshat contains {}", &query),
+        n if n > 1 => println!("There are {num} lines that contains {}", &query),
+        _ => eprintln!("Something went wrong!!!"),
     }
 
     num
