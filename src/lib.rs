@@ -3,6 +3,7 @@ use std::fs;
 use std::env;
 
 pub struct Command {
+    pub order: String,
     pub query: String,
     pub file_path: String,
     pub ignore_case: bool,
@@ -13,6 +14,11 @@ impl Command {
         mut args: impl Iterator<Item = String>,
     ) -> Result<Command, &'static str> {
         args.next();
+
+        let order = match(args).next() {
+            Some(arg) => arg,
+            None => return Err("Didn't get an order string"),
+        };
 
         let query = match args.next() {
             Some(arg) => arg,
@@ -27,6 +33,7 @@ impl Command {
         let ignore_case = env::var("IGNORE_CASE").is_ok();
 
         Ok(Command{
+            order,
             query,
             file_path,
             ignore_case
@@ -37,15 +44,24 @@ impl Command {
 pub fn run(command: Command) -> Result<(), Box<dyn Error>> {
     let contents = fs::read_to_string(command.file_path)?;
 
-    let results = if command.ignore_case{
-        search_case_insensitive(&command.query, &contents)
+    if command.ignore_case{
+        let results = search_case_insensitive(&command.query, &contents);
+        for line in results {
+            println!("{line}");
+        }
     } else {
-        search(&command.query, &contents)
+        if &command.order == "search" {
+            let results = search(&command.query, &contents);
+            for line in results {
+                println!("{line}");
+            }
+        } else if &command.order == "countline" {
+            let count = count_lines(&command.query, &contents);
+            println!("Matched lines: {}", count)
+        } else {
+            println!("Invalid order!")
+        }
     };
-
-    for line in results {
-        println!("{line}");
-    }
 
     Ok(())
 }   // Function to run the commands.
