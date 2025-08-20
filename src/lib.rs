@@ -116,7 +116,7 @@ pub fn count_lines(query: &str, contents: &str) -> i32 {
 
     match num {
         0 => println!("There are no lines that contains {}", &query),
-        1 => println!("There is only {num} lineshat contains {}", &query),
+        1 => println!("There is only {num} lines that contains {}", &query),
         n if n > 1 => println!("There are {num} lines that contains {}", &query),
         _ => eprintln!("Something went wrong!!!"),
     }
