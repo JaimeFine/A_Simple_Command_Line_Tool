@@ -78,7 +78,7 @@ pub fn run(command: Command) -> Result<(), Box<dyn Error>> {
     };
 
     Ok(())
-}   // Function to run the commands.
+}
 
 #[cfg(test)]
 mod tests {
