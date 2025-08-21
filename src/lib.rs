@@ -53,7 +53,7 @@ impl Command {
             ignore_case
         })
     }
-}   // A method for the Config struct.
+}
 
 pub fn run(command: Command) -> Result<(), Box<dyn Error>> {
     let contents = fs::read_to_string(command.file_path)?;
