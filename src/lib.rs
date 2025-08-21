@@ -123,7 +123,7 @@ pub fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
         .lines()
         .filter(|line| line.contains(query))
         .collect()
-}   // A function for the search of the result of the command
+}
 
 pub fn search_case_insensitive<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
     let query = query.to_lowercase();
