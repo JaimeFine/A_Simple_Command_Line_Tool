@@ -7,7 +7,7 @@ pub struct Command {
     pub query: String,
     pub file_path: String,
     pub ignore_case: bool,
-}   // This is for the command.
+}
 
 impl Command {
     pub fn build(
