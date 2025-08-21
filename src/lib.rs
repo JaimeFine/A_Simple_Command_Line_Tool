@@ -136,7 +136,7 @@ pub fn search_case_insensitive<'a>(query: &str, contents: &'a str) -> Vec<&'a st
     }
 
     results
-}   // A function that works the same as search(), but insensitive to case.
+}
 
 pub fn count_lines(query: &str, contents: &str) -> i32 {
     let num = contents
