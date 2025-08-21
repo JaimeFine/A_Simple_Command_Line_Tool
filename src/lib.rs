@@ -15,10 +15,24 @@ impl Command {
     ) -> Result<Command, &'static str> {
         args.next();
 
-        let order = match(args).next() {
+        let first_arg = match args.next() {
             Some(arg) => arg,
-            None => return Err("Didn't get an order string"),
+            None => return Err("Didn't get an order"),
         };
+
+        if first_arg == "--help" {
+            println!(
+                "Usage: <program> <order> <query> <file_path>\n\
+                 Orders:\n\
+                 - search: search for lines containing the query\n\
+                 - countline: count lines containing the query\n\
+                 Options:\n\
+                 - IGNORE_CASE=1 (set as env var for case-insensitive search)"
+            );
+            std::process::exit(0);
+        }
+
+        let order = first_arg;
 
         let query = match args.next() {
             Some(arg) => arg,
